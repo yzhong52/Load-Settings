@@ -76,7 +76,7 @@ private:
     {
         auto originalValue = param1.value;
         param1.value = pt.get( param1.name, param1.value );
-        param1.updated = (originalValue==param1.value);
+        param1.updated = (originalValue!=param1.value);
 
         loadTree( pt, params... );
     }
@@ -104,8 +104,10 @@ private:
 
 
 template<typename T>
-Settings::Parameter<T> MakeParam(T& value, const string& name )
+Settings::Parameter<T> MakeParam(T& value, string&& name )
 {
+    // replace all spaces in the name string to underscore
+    replace( name.begin(), name.end(), ' ', '_' );
     return Settings::Parameter<T>( {value, name, false} );
 }
 
