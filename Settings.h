@@ -21,11 +21,11 @@ public:
     template<typename... Parameter>
     static void load(const string& filename, Parameter&&... params )
     {
+        // Create empty property tree object
+        ptree pt;
+
         try
         {
-            // Create empty property tree object
-            ptree pt;
-
             // Load XML file and put its contents in property tree.
             // No namespace qualification is needed, because of Koenig
             // lookup on the second argument. If reading fails, exception
@@ -36,17 +36,20 @@ public:
         }
         catch (std::exception &e)
         {
-            std::cout << "Error: " << e.what() << "\n";
+            std::cout << "Loading xml Error: " << e.what() << "\n";
+        }
 
-            // Create empty property tree object
-            ptree pt;
-
+        try {
             // Write parameters to tree
             writeTree( pt, params... );
 
             // Save tree to file
             write_xml( filename, pt );
         }
+        catch (std::exception &e ) {
+            std::cout << "Saving xml Error: " << e.what() << "\n";
+        }
+
 
         cout << endl << "Parameters are set to the following: " << endl;
         print( params... );
