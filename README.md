@@ -33,7 +33,7 @@ Parameters are set to the following:
              float: 1730
 ```
 
-***<file_name>.xml***
+***file_name.xml***
 ```
 <?xml version="1.0" encoding="utf-8"?>
 <boolean>true</boolean>
