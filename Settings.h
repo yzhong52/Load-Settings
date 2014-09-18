@@ -36,7 +36,7 @@ public:
         }
         catch (std::exception &e)
         {
-            std::cout << "Loading xml Error: " << e.what() << "\n";
+            std::cout << "Loading xml Error: " << e.what() << std::endl;
         }
 
         try {
@@ -44,16 +44,28 @@ public:
             writeTree( pt, params... );
 
             // Save tree to file
-            write_xml( filename, pt );
+            // Reference: [boostproperty-tree-xml-pretty-printing]
+            //            http://stackoverflow.com/questions/6572550/
+            boost::property_tree::xml_writer_settings<char> settings('\n', 1);
+            write_xml( filename, pt, std::locale(), settings );
         }
         catch (std::exception &e ) {
-            std::cout << "Saving xml Error: " << e.what() << "\n";
+            std::cout << "Saving xml Error: " << e.what() << std::endl;
         }
 
 
         cout << endl << "Parameters are set to the following: " << endl;
+        paramNameLength = maxParamNameLength( params... );
         print( params... );
     }
+
+    template<typename T>
+    struct Parameter
+    {
+        T& value;
+        const string& name;
+        bool updated;
+    };
 
 private:
 
@@ -90,20 +102,24 @@ private:
     // Print parameters
     template<class Parameter1, class ... Parameter>
     static void print( Parameter1& param1, Parameter&... params ){
-        cout.width(18);
+        // Add two more white space in front of the name for better formating
+        cout.width( paramNameLength+2 );
         cout << param1.name << ": " << param1.value;
         cout << ( param1.updated ? " (updated)" : "" ) << endl;
         print( params... );
     }
 
-    template<typename T>
-    struct Parameter
-    {
-        T& value;
-        const string& name;
-        bool updated;
-    };
+    static unsigned paramNameLength;
+    static unsigned maxParamNameLength(){ return 0; }
+
+    // Get the maximum length of the names of the parameters
+    template<class Parameter1, class ... Parameter>
+    static unsigned maxParamNameLength( Parameter1& param1, Parameter&... params ){
+        return std::max( (unsigned)param1.name.size(), maxParamNameLength(params...) );
+    }
 };
+
+unsigned Settings::paramNameLength = 10;
 
 
 template<typename T>
