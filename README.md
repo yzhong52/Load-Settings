@@ -26,7 +26,8 @@ Example output
 ------
 
 ***Console***
-```
+
+```C++
 Parameters are set to the following: 
            boolean: 1 (updated)
            integer: 2000

@@ -1,5 +1,13 @@
-*.xml
-obj/*
-bin/*
-*.depend
-*.layout
+# For Mac
+.DS_Store
+
+# For CMake
+CMakeCache.txt
+CMakeFiles
+Makefile
+cmake_install.cmake
+install_manifest.txt
+
+# For build folder
+build/*
+
